@@ -10,7 +10,7 @@ exports.up = function(knex) {
   .createTable("posts", tbl =>{
     tbl.increments()
     tbl.string("title",128).notNullable()
-    tbl.string("content").notNullable() // do I need a lenght specificed? 
+    tbl.string("content", 3000).notNullable()  
     tbl.integer("author_id").notNullable().unsigned().references('users.id').onDelete('RESTRICT').onUpdate('CASCADE')
 
   })
