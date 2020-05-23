@@ -3,11 +3,11 @@ const router = require("express").Router()
 const Posts = require('./post-model')
 
 router.get("/", (req, res) =>{
-  Posts.find()
+  Posts.find("posts")
   .then(posts =>{
     res.status(200).json(posts)
   })
-  .catch(err =>{
+  .catch(error =>{
     res.status(500).json(error)
   })
 })

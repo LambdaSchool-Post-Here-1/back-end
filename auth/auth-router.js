@@ -3,6 +3,7 @@ const bcryptjs = require('bcryptjs')
 const jwt = require("jsonwebtoken")
 const configVars = require("../config/vars")
 const db = require('../data/dbconfig')
+const Users = require('../posts/post-model') // need to rename these files
 
 function isValid(user)
 {
@@ -36,54 +37,91 @@ router.post('/register', (req, res) =>
     const hash = bcryptjs.hashSync(credentials.password, rounds)
     credentials.password = hash
     //save user to db
-    add(credentials).then(user =>{
+    add(credentials).then(user =>
+    {
       res.status(200).json(user)
     })
-    .catch(e =>{
-      res.status(500).json(e)
-    })
+      .catch(e =>
+      {
+        res.status(500).json(e)
+      })
   }
-  else{
+  else
+  {
     res.status(500).json("Please provide username and password")
   }
 })
-  
+
 
 router.post('/login', (req, res) =>
 {
-  // implement login
   const { username, password } = req.body
   if (isValid(req.body))
   {
-    db('users').where({username:username}).orderBy('id').then(([user])=>{
-      if (user && bcryptjs.compareSync(password, user.password)){
-        const token = createToken(user)
-        // req.session.loggedIn = true
-        // req.session.user = user
-        // console.log("req.session", req.session.user) --- not working. abandon this method, ask TL or something. 
-        res.status(200).json({message:`Welcome to our API ${user.username}. Your token is ${token}.`, token})
-      }
-      else{
-        res.status(401).json({message: "invalid credentials. User==", user})
-      }
+    Users.findBy('users', { username: username })
+      .then(([user]) =>
+      {
+        // if (user && bcryptjs.compareSync(password, user.password)){
+        if (password === user.password){
+
+          req.session.loggedIn = true
+          
+          req.session.user = user
+
+          res.status(200).json("Welcome to our API")
+        }
+        else{
+          res.status(401).json({message:"Invalid Credentials. You shall not pass"})
+        }
     })
-    .catch(e =>{
-      res.status(500).json(e)
-    }) 
+      .catch(err =>
+      {
+        res.status(500).json(err)
+      })
   }
-  else{
-    res.status(400).json("Please provide correct username and credentials. ")
+  else
+  {
+    res.status(400).json({ message: "Please provide valid credentials or you shall not pass (username and password)" })
   }
-});
+})
+
+// router.post('/login', (req, res) =>
+// {
+//   // implement login
+//   const { username, password } = req.body
+//   if (isValid(req.body))
+//   {
+//     db('users').where({username:username}).orderBy('id').then(([user])=>{
+//       if (user && bcryptjs.compareSync(password, user.password)){
+//         const token = createToken(user)
+//         // req.session.loggedIn = true
+//         // req.session.user = user
+//         // console.log("req.session", req.session.user) --- not working. abandon this method, ask TL or something. 
+//         res.status(200).json({message:`Welcome to our API ${user.username}. Your token is ${token}.`, token})
+//       }
+//       else{
+//         res.status(401).json({message: "invalid credentials. User==", user})
+//       }
+//     })
+//     .catch(e =>{
+//       res.status(500).json(e)
+//     }) 
+//   }
+//   else{
+//     res.status(400).json("Please provide correct username and credentials. ")
+//   }
+// });
 
 
 
 
 
-function createToken(user){
-  const payload={
-    sub:user.id,
-    username:user.username  }
+function createToken(user)
+{
+  const payload = {
+    sub: user.id,
+    username: user.username
+  }
   const options = {
     expiresIn: '1d'
   }
@@ -91,6 +129,9 @@ function createToken(user){
   return jwt.sign(payload, configVars.jwtSecret, options)
 }
 
-
+function isValid(user)
+{
+  return Boolean(user.username && typeof user.password === 'string')
+}
 
 module.exports = router;

@@ -1,9 +1,13 @@
 const db = require("../data/dbconfig")
 
 module.exports = {
-  find
+  find, findBy
 }
 
-function find(){
-  return db('posts')
+function find(table){
+  return db(table)
+}
+
+function findBy(table, filter){
+  return db(table).where(filter).orderBy("id")
 }
