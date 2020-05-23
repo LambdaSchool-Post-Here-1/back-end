@@ -15,13 +15,13 @@ function findBy(table, filter){
 async function add(table, user){
   try {
     const [id] = await db(table).insert(user, "id")
-    return findById(id)
+    return findById("users",id)
   }
   catch(error){
     throw error
   }
 }
 
-function findById(id){
-  return db("users").where({id}).first()
+function findById(table,id){
+  return db(table).where({id}).first()
 }
