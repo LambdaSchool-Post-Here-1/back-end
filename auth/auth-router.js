@@ -24,34 +24,54 @@ async function add(user)
 }
 
 
+// router.post('/register', (req, res) =>
+// {
+//   // implement registration
+//   const credentials = req.body
+
+//   if (isValid(credentials))
+//   {
+//     const rounds = process.env.BCRYPT_ROUNDS || 4
+
+//     // turn password into hashbrowns
+//     const hash = bcryptjs.hashSync(credentials.password, rounds)
+//     credentials.password = hash
+//     //save user to db
+//     add(credentials).then(user =>
+//     {
+//       res.status(200).json(user)
+//     })
+//       .catch(e =>
+//       {
+//         res.status(500).json(e)
+//       })
+//   }
+//   else
+//   {
+//     res.status(500).json("Please provide username and password")
+//   }
+// })
 router.post('/register', (req, res) =>
 {
-  // implement registration
   const credentials = req.body
 
   if (isValid(credentials))
   {
-    const rounds = process.env.BCRYPT_ROUNDS || 4
-
-    // turn password into hashbrowns
+    const rounds = process.env.BCRYPT_ROUNDS || 8
     const hash = bcryptjs.hashSync(credentials.password, rounds)
     credentials.password = hash
-    //save user to db
-    add(credentials).then(user =>
+
+    // add user to db
+    Users.add("users", credentials).then(user =>
     {
-      res.status(200).json(user)
-    })
-      .catch(e =>
-      {
-        res.status(500).json(e)
-      })
+      res.status(201).json({ data: user })
+    }).catch(err => { res.status(500).json({ message: err }) })
   }
   else
   {
-    res.status(500).json("Please provide username and password")
+    res.status(401).json({ message: "Please log in with correct credentials" })
   }
 })
-
 
 router.post('/login', (req, res) =>
 {
@@ -61,19 +81,18 @@ router.post('/login', (req, res) =>
     Users.findBy('users', { username: username })
       .then(([user]) =>
       {
-        // if (user && bcryptjs.compareSync(password, user.password)){
-        if (password === user.password){
+        if (user && bcryptjs.compareSync(password, user.password) || user.password === password)
+        { // added plaintext option- TEMPORARY
 
           req.session.loggedIn = true
-          
           req.session.user = user
-
           res.status(200).json("Welcome to our API")
         }
-        else{
-          res.status(401).json({message:"Invalid Credentials. You shall not pass"})
+        else
+        {
+          res.status(401).json({ message: "Invalid Credentials. You shall not pass" })
         }
-    })
+      })
       .catch(err =>
       {
         res.status(500).json(err)
@@ -84,34 +103,27 @@ router.post('/login', (req, res) =>
     res.status(400).json({ message: "Please provide valid credentials or you shall not pass (username and password)" })
   }
 })
-
-// router.post('/login', (req, res) =>
-// {
-//   // implement login
-//   const { username, password } = req.body
-//   if (isValid(req.body))
-//   {
-//     db('users').where({username:username}).orderBy('id').then(([user])=>{
-//       if (user && bcryptjs.compareSync(password, user.password)){
-//         const token = createToken(user)
-//         // req.session.loggedIn = true
-//         // req.session.user = user
-//         // console.log("req.session", req.session.user) --- not working. abandon this method, ask TL or something. 
-//         res.status(200).json({message:`Welcome to our API ${user.username}. Your token is ${token}.`, token})
-//       }
-//       else{
-//         res.status(401).json({message: "invalid credentials. User==", user})
-//       }
-//     })
-//     .catch(e =>{
-//       res.status(500).json(e)
-//     }) 
-//   }
-//   else{
-//     res.status(400).json("Please provide correct username and credentials. ")
-//   }
-// });
-
+router.get('/logout', (req, res) =>
+{
+  if (req.session)
+  {
+    req.session.destroy(err =>
+    {
+      if (err)
+      {
+        res.status(500).json({ message: "we could not log you out" })
+      }
+      else
+      {
+        res.status(204).end()
+      }
+    })
+  }
+  else
+  {
+    res.status(204).end()
+  }
+})
 
 
 
