@@ -11,7 +11,7 @@ exports.up = function(knex) {
     tbl.increments()
     tbl.string("title",128).notNullable()
     tbl.string("content", 3000).notNullable()  
-    tbl.integer("author_id").notNullable().unsigned().references('users.id').onDelete('RESTRICT').onUpdate('CASCADE')
+    tbl.string("author").notNullable().unsigned().references('users.username').onDelete('RESTRICT').onUpdate('CASCADE')
 
   })
 };
