@@ -5,12 +5,12 @@ API documentation:
 BASE URL: https://post-here-heroku.herokuapp.com
 
 ENDPOINTS:
-I. GET /
+I. GET /  
 II. GET /api/reddit/  
-III. POST /api/reddit/ 
-IV. POST /api/auth/register 
-V. POST /api/auth/login
-VI. GET /api/auth/logout
+III. POST /api/reddit/  
+IV. POST /api/auth/register  
+V. POST /api/auth/login  
+VI. GET /api/auth/logout  
 
 
 # I. GET /
