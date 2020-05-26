@@ -53,6 +53,23 @@ module.exports = {
     seeds:{
       directory: "./data/seeds/"
     }
-  }
+  },
 
+  testing: {
+    client: 'sqlite3',
+    connection: {
+      filename: './reddit.db3'
+    },
+    useNullAsDefault:true,
+    pool: {
+      min: 2,
+      max: 10
+    },
+    migrations: {
+      tableName: 'knex_migrations'
+    },
+    seeds:{
+      directory: "./data/seeds/"
+    }
+  }
 };

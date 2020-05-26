@@ -5,10 +5,6 @@ const configVars = require("../config/vars")
 const db = require('../data/dbconfig')
 const Users = require('../posts/post-model') // need to rename these files
 
-function isValid(user)
-{
-  return Boolean(user.username && typeof user.password === 'string')
-}
 
 async function add(user)
 {
