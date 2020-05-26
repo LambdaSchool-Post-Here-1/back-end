@@ -1,7 +1,7 @@
 const db = require("../data/dbconfig")
 
 module.exports = {
-  find, findBy, add, findById
+  find, findBy, add, findById, deleteById
 }
 
 function find(table){
@@ -24,4 +24,8 @@ async function add(table, user){
 
 function findById(table,id){
   return db(table).where({id}).first()
+}
+
+function deleteById(table, id){
+  return db(table).where({id}).first().delete()
 }

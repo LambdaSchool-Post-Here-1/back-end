@@ -58,3 +58,11 @@ Type of object required:
 
  -- logs out user.
 
+
+# VII. GET /api/reddit/:id
+
+ -- Gets post by id
+
+# VIII. DELETE /api/reddit/:id
+
+ -- Deletes post by id

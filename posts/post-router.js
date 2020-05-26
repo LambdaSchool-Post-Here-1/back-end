@@ -23,17 +23,24 @@ router.get("/:id", (req, res) =>{
 })
 
 router.post("/", (req, res) =>{
-  // TODO change req.body.author to user that's logged in
+
   req.body.author = req.session.user.username
-  // console.log("req.session.user.username", req.session)
+
   db('posts').insert(req.body)
   .then(post =>{
-    res.status(200).json(posts)
+    res.status(200).json(post)
   })
   .catch(error =>{
     res.status(500).json(error)
   })
 })
 
+router.delete('/:id', (req,res)=>{
+  Posts.deleteById('posts', req.params.id)
+  .then(obj =>{
+    res.status(200).json(obj)
+  })
+  .catch(err => res.status(500).json(err))
+})
 
 module.exports = router
