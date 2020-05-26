@@ -4,7 +4,7 @@ API documentation:
 
 BASE URL: https://post-here-heroku.herokuapp.com
 
-ENDPOINTS:
+ENDPOINTS:  
 I. GET /  
 II. GET /api/reddit/  
 III. POST /api/reddit/  
