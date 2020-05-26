@@ -27,13 +27,12 @@ VI. GET /api/auth/logout
 
 ```json
 {
-	"title":"always with me always with you",
-	"content":"no lyrics, just sweet melodies",
-	"author":"joe" 
+	"title":"Nothing Else Matters",
+	"content":"So close, no matter how far...",
 }
 ```
 
-"author" property must match existing username in users table since it is a foreign key reference. 
+"author" property (foreign key reference) is set to logged in user, and id increments automatically. 
 
 
 

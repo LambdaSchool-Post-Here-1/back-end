@@ -23,7 +23,9 @@ router.get("/:id", (req, res) =>{
 })
 
 router.post("/", (req, res) =>{
-  
+  // TODO change req.body.author to user that's logged in
+  req.body.author = req.session.user.username
+  // console.log("req.session.user.username", req.session)
   db('posts').insert(req.body)
   .then(post =>{
     res.status(200).json(posts)
