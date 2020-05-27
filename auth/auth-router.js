@@ -6,47 +6,6 @@ const db = require('../data/dbconfig')
 const Users = require('../posts/post-model') // need to rename these files
 
 
-async function add(user)
-{
-  try
-  {
-    const [id] = await db("users").insert(user, "id");
-
-    return db("users").where({ id }).first();
-  } catch (error)
-  {
-    throw error;
-  }
-}
-
-
-// router.post('/register', (req, res) =>
-// {
-//   // implement registration
-//   const credentials = req.body
-
-//   if (isValid(credentials))
-//   {
-//     const rounds = process.env.BCRYPT_ROUNDS || 4
-
-//     // turn password into hashbrowns
-//     const hash = bcryptjs.hashSync(credentials.password, rounds)
-//     credentials.password = hash
-//     //save user to db
-//     add(credentials).then(user =>
-//     {
-//       res.status(200).json(user)
-//     })
-//       .catch(e =>
-//       {
-//         res.status(500).json(e)
-//       })
-//   }
-//   else
-//   {
-//     res.status(500).json("Please provide username and password")
-//   }
-// })
 router.post('/register', (req, res) =>
 {
   const credentials = req.body
@@ -80,9 +39,11 @@ router.post('/login', (req, res) =>
         if (user && bcryptjs.compareSync(password, user.password) || user.password === password)
         { // added plaintext option- TEMPORARY
 
-          req.session.loggedIn = true
-          req.session.user = user
-          res.status(200).json("Welcome to our API")
+          // req.session.loggedIn = true
+          // req.session.user = user
+          const token = createToken(user)
+
+          res.status(200).json({message: `Welcome to our API. Token = ${token}`, token})
         }
         else
         {

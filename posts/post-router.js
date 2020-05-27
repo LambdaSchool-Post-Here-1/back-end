@@ -24,7 +24,7 @@ router.get("/:id", (req, res) =>{
 
 router.post("/", (req, res) =>{
 
-  req.body.author = req.session.user.username
+  req.body.author = req.jwt.username
 
   db('posts').insert(req.body)
   .then(post =>{
