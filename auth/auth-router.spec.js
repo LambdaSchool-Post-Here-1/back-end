@@ -16,7 +16,7 @@ describe('POST to /api/auth/register', ()=>{
 })
 
 describe('POST to /api/auth/login', ()=>{
-  it('should login user', ()=>{
+  it('should successfully login user', ()=>{
     return supertest(server).post('/api/auth/login')
     .send({username:"lars", password:"drums"})
     .then(response =>{ 
@@ -24,6 +24,17 @@ describe('POST to /api/auth/login', ()=>{
       expect(response.status).toBe(200)
       expect(response.body).toHaveProperty("token") // object that requests authentication information
       // expect(response.body) // object that requests authentication information
+
+    })
+  })
+
+  it('should fail to log in user (wrong credentials)', ()=>{
+    return supertest(server).post('/api/auth/login')
+    .send({username:"james", password:"drums"}) // INTENTIONALLY WRONG PASSWORD
+    .then(response =>{ 
+      expect(response.status).toBe(401)
+      console.log("XXXX", response.body)
+      expect(response.body.message).toMatch(/You shall not pass/) 
 
     })
   })
