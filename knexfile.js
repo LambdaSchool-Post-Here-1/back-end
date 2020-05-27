@@ -58,7 +58,7 @@ module.exports = {
   testing: {
     client: 'sqlite3',
     connection: {
-      filename: './reddit.db3'
+      filename: './redditTest.db3'
     },
     useNullAsDefault:true,
     pool: {

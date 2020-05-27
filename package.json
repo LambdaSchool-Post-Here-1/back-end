@@ -36,5 +36,8 @@
     "cross-env": "^7.0.2",
     "jest": "^26.0.1",
     "supertest": "^4.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
